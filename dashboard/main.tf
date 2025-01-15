@@ -45,7 +45,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_area {
-      title  = "Average Wait Type Max. By Instance Type"
+      title  = "Max. Average Wait Time By Wait Type"
       row    = 1
       column = 4
       width  = 9
@@ -71,7 +71,7 @@ resource "newrelic_one_dashboard" "mssql" {
     widget_pie {
       title  = "Total Log File Count by Monitors"
       row    = 3
-      column = 4
+      column = 10
       width  = 6
       height = 3
 
@@ -82,9 +82,9 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_table {
       title  = "Availability Database Backup State"
-      row    = 4
-      column = 5
-      width  = 4
+      row    = 6
+      column = 1
+      width  = 6
       height = 3
 
       nrql_query {
@@ -93,7 +93,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_billboard {
-      title  = "Group Synchronization Health Status"
+      title  = "Group Synchronization Current Health Status"
       row    = 3
       column = 1
       width  = 3
@@ -105,9 +105,9 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_billboard {
-      title  = "Group Database State"
+      title  = "Group Database Current State"
       row    = 3
-      column = 10
+      column = 4
       width  = 3
       height = 3
 
@@ -117,20 +117,20 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_table {
-      title  = "Summary Monitor Health"
-      row    = 5
+      title  = "Group Monitor Health Summary"
+      row    = 4
       column = 1
       width  = 12
       height = 3
 
       nrql_query {
-        query = "FROM  MssqlCustomQuerySample SELECT AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,DatabaseState WHERE label.query='grouphealth'  WHERE environment IN ({{Environment}}) AND instance IN ({{Instance}})"
+        query = "FROM MssqlCustomQuerySample SELECT AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,DatabaseState WHERE label.query='grouphealth'  WHERE environment IN ({{Environment}}) AND instance IN ({{Instance}})"
       }
     }
 
     widget_table {
       title  = "Replica Health Summary"
-      row    = 6
+      row    = 5
       column = 4
       width  = 9
       height = 3
@@ -142,7 +142,7 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_billboard {
       title  = "Unhealth State Replica Server"
-      row    = 7
+      row    = 5
       column = 1
       width  = 3
       height = 3
@@ -150,15 +150,16 @@ resource "newrelic_one_dashboard" "mssql" {
       nrql_query {
         query = "FROM MssqlCustomQuerySample SELECT count(ReplicaServerName) WHERE label.query='grouphealth' AND SynchronizationHealth!='HEALTHY'  AND environment IN ({{Environment}}) AND instance IN ({{ Instance}}) FACET SynchronizationHealth"
       }
+      critical = 1
     }
 
     ## name = "SIRIUS SQL"
 
     widget_table {
-      title  = "Tables with identity columns"
-      row    = 7
-      column = 4
-      width  = 9
+      title  = "Tables With Identity Columns"
+      row    = 6
+      column = 7
+      width  = 6
       height = 3
 
       nrql_query {
@@ -168,7 +169,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_table {
-      title  = "Transient tables over their specified row count"
+      title  = "Transient Tables Over Their Specified Row Count"
       row    = 8
       column = 1
       width  = 12
@@ -182,7 +183,7 @@ resource "newrelic_one_dashboard" "mssql" {
     # # name = "sysadmin"
 
     widget_table {
-      title  = "sysadmin"
+      title  = "Sysadmin"
       row    = 9
       column = 1
       width  = 12
@@ -196,11 +197,11 @@ resource "newrelic_one_dashboard" "mssql" {
     # # name = "sqlinstance_reboot"
 
     widget_table {
-      title  = "sqlinstance_reboot_prd"
+      title  = "Sqlinstance-Reboot-Prd"
       row    = 10
       column = 1
       width  = 12
-      height = 3
+      height = 2
 
       nrql_query {
         query = "SELECT crdate, instance, fullHostname, instanceType from MssqlCustomQuerySample where label.query ='instance_reboot' AND environment IN ({{Environment}}) AND instance IN ({{ Instance}}) since 3 days ago LIMIT MAX"
@@ -221,7 +222,7 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_billboard {
       title  = "Minutes Since Last Backup (Log Shipping)"
-      row    = 3
+      row    = 7
       column = 1
       width  = 3
       height = 3
@@ -233,7 +234,7 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_table {
       title  = "Source Log Summary"
-      row    = 3
+      row    = 7
       column = 4
       width  = 9
       height = 3
@@ -446,7 +447,7 @@ resource "newrelic_one_dashboard" "mssql" {
   page {
     name = "Reboot & Locked Events"
     widget_table {
-      title  = "server_reboot_prd"
+      title  = "Server-Reboot-Prd"
       row    = 1
       column = 1
       width  = 12
