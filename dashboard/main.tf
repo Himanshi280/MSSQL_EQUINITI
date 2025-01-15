@@ -70,9 +70,9 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_pie {
       title  = "Total Log File Count by Monitors"
-      row    = 4
-      column = 1
-      width  = 4
+      row    = 3
+      column = 4
+      width  = 6
       height = 3
 
       nrql_query {
@@ -94,9 +94,9 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_billboard {
       title  = "Group Synchronization Health Status"
-      row    = 4
-      column = 9
-      width  = 4
+      row    = 3
+      column = 1
+      width  = 3
       height = 3
 
       nrql_query {
@@ -106,8 +106,8 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_billboard {
       title  = "Group Database State"
-      row    = 6
-      column = 1
+      row    = 3
+      column = 10
       width  = 3
       height = 3
 
@@ -208,7 +208,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_table {
-      title  = "Destination log shipping"
+      title  = "Destination Log Shipping"
       row    = 11
       column = 1
       width  = 12
@@ -220,7 +220,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_billboard {
-      title  = "Minutes since last backup (Log shipping)"
+      title  = "Minutes Since Last Backup (Log Shipping)"
       row    = 3
       column = 1
       width  = 3
@@ -232,7 +232,7 @@ resource "newrelic_one_dashboard" "mssql" {
     }
 
     widget_table {
-      title  = "Source log summary"
+      title  = "Source Log Summary"
       row    = 3
       column = 4
       width  = 9
@@ -246,7 +246,7 @@ resource "newrelic_one_dashboard" "mssql" {
   }
 
   page {
-    name = "MSSQL Jobs & System Resources"
+    name = "Jobs & System Resources"
 
     widget_table {
       title  = "SQL Job Failed"

@@ -195,7 +195,7 @@ nrql_alert_condition_details_mssql = {
     aggregation_method              = "event_flow"
     aggregation_delay               = 120
     baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample SELECT  uniqueCount(SynchronizationHealth) WHERE label.query='grouphealth' AND SynchronizationHealth!='HEALTHY' AND instance LIKE '%prd%' FACET AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,instance"
+    query                           = "FROM MssqlCustomQuerySample SELECT count(SynchronizationHealth) WHERE label.query='grouphealth' AND SynchronizationHealth!='HEALTHY' AND instance LIKE '%prd%' FACET AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,instance"
     warning                         = false
     critical                        = true
     critical_operator               = "above_or_equals"
@@ -255,7 +255,7 @@ nrql_alert_condition_details_mssql = {
     aggregation_method              = "event_flow"
     aggregation_delay               = 120
     baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample  SELECT uniqueCount(instance)WHERE label.query='agafc'  AND FailoverMode!='AUTOMATIC' AND AvailabilityMode !='SYNCHRONOUS_COMMIT' AND instance LIKE '%prd%' FACET instance, hostname,AvailabilityMode,FailoverMode"
+    query                           = "FROM MssqlCustomQuerySample  SELECT uniqueCount(instance)WHERE label.query='agafc' AND FailoverMode!='AUTOMATIC' AND AvailabilityMode !='SYNCHRONOUS_COMMIT' AND instance LIKE '%prd%' FACET instance, hostname,AvailabilityMode,FailoverMode"
     warning                         = false
     critical                        = true
     critical_operator               = "above_or_equals"
@@ -263,230 +263,230 @@ nrql_alert_condition_details_mssql = {
     critical_threshold_duration     = 300
     critical_threshold_occurrences = "all"
   },
-"13" = {
-    type                          = "static"
-    account_id                    = 2947933
-    name                          = "Databse backup status (Backup Outdated)"
-    description                   = ""
-    runbook_url                   = "https://www.example.com"
-    enabled                       = false
-    violation_time_limit_seconds  = 3600
-    aggregation_window            = 300
-    aggregation_method            = "event_flow"
-    aggregation_delay             = 120
-    baseline_direction            = "upper_only"
-    query                         = "FROM MssqlCustomQuerySample SELECT uniqueCount(BackupStatus) WHERE label.query='dbbackup' AND BackupStatus LIKE '%Backup outdated%' AND instance LIKE '%prd%' FACET LogBackupStatus,instance,hostname,DatabaseName"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
-}
-"14" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "Database backup status (No Backup)"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample SELECT Count(BackupStatus) WHERE BackupStatus LIKE '%No Backup%' AND label.query='dbbackup' AND instance LIKE '%prd%' FACET LogBackupStatus,instance,hostname,DatabaseName"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above_or_equals"
-    critical_threshold              = 1
-    critical_threshold_duration     = 300
-    critical_threshold_occurrences = "all"
-}
-"15" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "DB engine health status"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample SELECT Count(DBEngineHealthStatus) WHERE label.query='dbengine' WHERE DBEngineHealthStatus!='Healthy' and instance LIKE '%prd%' FACET instance,StartTime,hostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above_or_equals"
-    critical_threshold              = 1
-    critical_threshold_duration     = 300
-    critical_threshold_occurrences = "all"
-}
-"16" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "Destination Log Shipping"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample SELECT uniqueCount(MinutesSinceLastRestore) WHERE MinutesSinceLastRestore > RestoreThresholdMinutes AND label.query='destinationlog'  FACET hostname,entityName,DestinationDatabase, RestoreThresholdMinutes"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above_or_equals"
-    critical_threshold              = 1
-    critical_threshold_duration     = 300
-    critical_threshold_occurrences = "all"
-}
-"17" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "MSSql job failed"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "select count(*) from MssqlCustomQuerySample where label.query = 'sqljob' AND `RUN STATUS` = 0 and instance LIKE '%prd%' facet hostname, instance, `JOB NAME`,  DESCRIPTION, `STEP NAME`, fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 2400
-    critical_threshold_occurrences = "all"
-}
-"18" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "MSSQL instance reboot"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "SELECT count(*) from MssqlCustomQuerySample where label.query ='instance_reboot' and instance like '%prd%' FACET instance, fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 3600
-    critical_threshold_occurrences = "all"
-}
-"19" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "MSSql job cancelled"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "select count(*) from MssqlCustomQuerySample where label.query = 'sqljob' AND `RUN STATUS` = 3 and instance LIKE '%prd%' facet hostname, instance, `JOB NAME`, DESCRIPTION, `STEP NAME`, fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 2400
-    critical_threshold_occurrences = "all"
-}
-"20" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "SQL Account locked"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 18456 OR `EventID` = '18456' OR `EventID` = 18486 OR `EventID` = '18486') AND `environment` = 'prd' AND hostname like '%prd%' and message LIKE '%lock%' facet fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 3600
-    critical_threshold_occurrences = "all"
-}
-"21" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "SQL event 17063"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 17063 OR `EventID` = '17063') AND `environment` = 'prd' AND hostname like '%prd%' AND message like '% x %' facet fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 3600
-    critical_threshold_occurrences = "all"
-}
-"22" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "SQL event 17063 - AuditLog - User and count"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 17063 OR `EventID` = '17063') AND `environment` = 'prd' AND hostname like '%prd%' AND message like '%AuditLog - User and count%' facet fullHostname"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above"
-    critical_threshold              = 0
-    critical_threshold_duration     = 3600
-    critical_threshold_occurrences = "all"
-}
-"23" = {
-    type                            = "static"
-    account_id                      = 2947933
-    name                            = "Source Log Shipping"
-    description                     = ""
-    runbook_url                     = "https://www.example.com"
-    enabled                         = false
-    violation_time_limit_seconds    = 3600
-    aggregation_window              = 300
-    aggregation_method              = "event_flow"
-    aggregation_delay               = 120
-    baseline_direction              = "upper_only"
-    query                           = "FROM MssqlCustomQuerySample SELECT count( MinutesSinceLastBackup) WHERE MinutesSinceLastBackup > BackupThresholdMinutes AND label.query='sourcelog' and instance LIKE '%prd%' FACET MinutesSinceLastBackup,instance, databaseName"
-    warning                         = false
-    critical                        = true
-    critical_operator               = "above_or_equals"
-    critical_threshold              = 1
-    critical_threshold_duration     = 300
-    critical_threshold_occurrences = "all"
-}
+    "13" = {
+        type                          = "static"
+        account_id                    = 2947933
+        name                          = "Databse backup status (Backup Outdated)"
+        description                   = ""
+        runbook_url                   = "https://www.example.com"
+        enabled                       = false
+        violation_time_limit_seconds  = 3600
+        aggregation_window            = 300
+        aggregation_method            = "event_flow"
+        aggregation_delay             = 120
+        baseline_direction            = "upper_only"
+        query                         = "FROM MssqlCustomQuerySample SELECT uniqueCount(BackupStatus) WHERE label.query='dbbackup' AND BackupStatus LIKE '%Backup outdated%' AND instance LIKE '%prd%' FACET LogBackupStatus,instance,hostname,DatabaseName"
+        warning                       = true
+        critical                      = false
+        warning_operator              = "above_or_equals"
+        warning_threshold             = 1
+        warning_threshold_duration    = 300
+        warning_threshold_occurrences = "all"
+    }
+    "14" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "Database backup status (No Backup)"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "FROM MssqlCustomQuerySample SELECT Count(BackupStatus) WHERE BackupStatus LIKE '%No Backup%' AND label.query='dbbackup' AND instance LIKE '%prd%' FACET LogBackupStatus,instance,hostname,DatabaseName"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above_or_equals"
+        critical_threshold              = 1
+        critical_threshold_duration     = 300
+        critical_threshold_occurrences = "all"
+    }
+    "15" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "DB engine health status"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "FROM MssqlCustomQuerySample SELECT Count(DBEngineHealthStatus) WHERE label.query='dbengine' WHERE DBEngineHealthStatus!='Healthy' and instance LIKE '%prd%' FACET instance,StartTime,hostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above_or_equals"
+        critical_threshold              = 1
+        critical_threshold_duration     = 300
+        critical_threshold_occurrences = "all"
+    }
+    "16" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "Destination Log Shipping"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "FROM MssqlCustomQuerySample SELECT uniqueCount(MinutesSinceLastRestore) WHERE MinutesSinceLastRestore > RestoreThresholdMinutes AND label.query='destinationlog'  FACET hostname,entityName,DestinationDatabase, RestoreThresholdMinutes"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above_or_equals"
+        critical_threshold              = 1
+        critical_threshold_duration     = 300
+        critical_threshold_occurrences = "all"
+    }
+    "17" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "MSSql job failed"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "select count(*) from MssqlCustomQuerySample where label.query = 'sqljob' AND `RUN STATUS` = 0 and instance LIKE '%prd%' facet hostname, instance, `JOB NAME`,  DESCRIPTION, `STEP NAME`, fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 2400
+        critical_threshold_occurrences = "all"
+    }
+    "18" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "MSSQL instance reboot"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "SELECT count(*) from MssqlCustomQuerySample where label.query ='instance_reboot' and instance like '%prd%' FACET instance, fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 3600
+        critical_threshold_occurrences = "all"
+    }
+    "19" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "MSSql job cancelled"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "select count(*) from MssqlCustomQuerySample where label.query = 'sqljob' AND `RUN STATUS` = 3 and instance LIKE '%prd%' facet hostname, instance, `JOB NAME`, DESCRIPTION, `STEP NAME`, fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 2400
+        critical_threshold_occurrences = "all"
+    }
+    "20" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "SQL Account locked"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 18456 OR `EventID` = '18456' OR `EventID` = 18486 OR `EventID` = '18486') AND `environment` = 'prd' AND hostname like '%prd%' and message LIKE '%lock%' facet fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 3600
+        critical_threshold_occurrences = "all"
+    }
+    "21" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "SQL event 17063"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 17063 OR `EventID` = '17063') AND `environment` = 'prd' AND hostname like '%prd%' AND message like '% x %' facet fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 3600
+        critical_threshold_occurrences = "all"
+    }
+    "22" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "SQL event 17063 - AuditLog - User and count"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "SELECT count(*) FROM Log WHERE (`EventID` = 17063 OR `EventID` = '17063') AND `environment` = 'prd' AND hostname like '%prd%' AND message like '%AuditLog - User and count%' facet fullHostname"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above"
+        critical_threshold              = 0
+        critical_threshold_duration     = 3600
+        critical_threshold_occurrences = "all"
+    }
+    "23" = {
+        type                            = "static"
+        account_id                      = 2947933
+        name                            = "Source Log Shipping"
+        description                     = ""
+        runbook_url                     = "https://www.example.com"
+        enabled                         = false
+        violation_time_limit_seconds    = 3600
+        aggregation_window              = 300
+        aggregation_method              = "event_flow"
+        aggregation_delay               = 120
+        baseline_direction              = "upper_only"
+        query                           = "FROM MssqlCustomQuerySample SELECT count( MinutesSinceLastBackup) WHERE MinutesSinceLastBackup > BackupThresholdMinutes AND label.query='sourcelog' and instance LIKE '%prd%' FACET MinutesSinceLastBackup,instance, databaseName"
+        warning                         = false
+        critical                        = true
+        critical_operator               = "above_or_equals"
+        critical_threshold              = 1
+        critical_threshold_duration     = 300
+        critical_threshold_occurrences = "all"
+    }
 }  
 
-//
-alert_policy_mssql_rules = "MSSQL-Rules-Monitors-Policy"
+//Rules
+alert_policy_mssql_rules = "MSSQL-Rules-Policy"
 
 incident_preference_mssql_rules = "PER_CONDITION_AND_TARGET"
 
@@ -504,12 +504,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=20554 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "1" = {
@@ -525,12 +525,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9642 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "2" = {
@@ -546,12 +546,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9645 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "3" = {
@@ -567,12 +567,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8405 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "4" = {
@@ -588,12 +588,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9644 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "5" = {
@@ -609,12 +609,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=28072 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "6" = {
@@ -630,12 +630,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9643 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "7" = {
@@ -651,12 +651,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9646 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "8" = {
@@ -672,12 +672,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9789 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "9" = {
@@ -693,12 +693,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9004 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "10" = {
@@ -714,12 +714,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9736 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "11" = {
@@ -735,12 +735,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6291 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "12" = {
@@ -756,12 +756,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9649 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "13" = {
@@ -777,12 +777,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9761 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "14" = {
@@ -798,12 +798,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9641 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "15" = {
@@ -819,12 +819,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=605 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "16" = {
@@ -840,12 +840,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17179 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "17" = { 
@@ -861,12 +861,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=18204 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "18" = { 
@@ -882,12 +882,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9002 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "19" = { 
@@ -903,12 +903,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=1619 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "20" = { 
@@ -924,12 +924,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=5123 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "21" = { 
@@ -945,12 +945,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9701 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "22" = { 
@@ -966,12 +966,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9694 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "23" = { 
@@ -987,12 +987,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=28002 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "24" = { 
@@ -1008,12 +1008,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9698 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "25" = { 
@@ -1029,12 +1029,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9697 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "26" = { 
@@ -1050,12 +1050,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8921 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "27" = { 
@@ -1071,12 +1071,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=832 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "28" = { 
@@ -1092,12 +1092,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6805 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "29" = { 
@@ -1113,12 +1113,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6510 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "30" = { 
@@ -1134,12 +1134,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=21286 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "31" = { 
@@ -1155,12 +1155,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=1803 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "32" = { 
@@ -1176,12 +1176,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=1105 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "33" = { 
@@ -1197,12 +1197,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=10303 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "34" = { 
@@ -1218,12 +1218,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17204 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "35" = { 
@@ -1239,12 +1239,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17058 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "36" = { 
@@ -1260,12 +1260,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=5180 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "37" = { 
@@ -1281,12 +1281,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8966 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "38" = { 
@@ -1302,12 +1302,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3431 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "39" = { 
@@ -1323,12 +1323,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3619 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "40" = { 
@@ -1344,12 +1344,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=5123 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "41" = { 
@@ -1365,12 +1365,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3414 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "42" = { 
@@ -1385,13 +1385,13 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_method            = "event_flow"
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
-    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID =8957 AND  message LIKE '%error% ' AND  message LIKE '%Database consistency errors found and repaired%' FACET hostname"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID =8957 AND Level=1 OR Level=2 OR Level=5 AND  message LIKE '%Database consistency errors found and repaired%' FACET hostname"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "43" = { 
@@ -1406,13 +1406,13 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_method            = "event_flow"
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
-    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID =8957 AND  message LIKE '%error% ' AND  message LIKE '%Database consistency errors found%' FACET hostname"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID =8957 AND Level=1 OR Level=2 OR Level=5 AND  message LIKE '%Database consistency errors found%' FACET hostname"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "44" = { 
@@ -1428,12 +1428,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3413 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "45" = { 
@@ -1449,12 +1449,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=617 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "46" = { 
@@ -1470,12 +1470,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6610 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "47" = { 
@@ -1491,12 +1491,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6608 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "48" = { 
@@ -1512,12 +1512,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3417 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "49" = { 
@@ -1533,12 +1533,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=21285 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "50" = { 
@@ -1554,12 +1554,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6289 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "51" = { 
@@ -1575,12 +1575,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6517 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "52" = { 
@@ -1596,12 +1596,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=21284 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "53" = { 
@@ -1617,12 +1617,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6513 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "54" = { 
@@ -1638,12 +1638,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6511 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "55" = { 
@@ -1659,12 +1659,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6512 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "56" = { 
@@ -1680,12 +1680,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=7622 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "57" = { 
@@ -1701,12 +1701,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=7607 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "58" = { 
@@ -1722,12 +1722,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8630 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "59" = { 
@@ -1743,12 +1743,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8680 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "60" = { 
@@ -1764,12 +1764,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8621 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "61" = { 
@@ -1785,12 +1785,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=7105 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "62" = { 
@@ -1806,12 +1806,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=824 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "63" = { 
@@ -1827,12 +1827,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=4064 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "64" = { 
@@ -1848,12 +1848,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6536 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "65" = { 
@@ -1869,12 +1869,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6537 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "66" = { 
@@ -1890,12 +1890,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=654 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "67" = { 
@@ -1911,12 +1911,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8956 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "68" = { 
@@ -1932,12 +1932,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17207 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "69" = { 
@@ -1953,12 +1953,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17218 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "70" = { 
@@ -1974,12 +1974,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=823 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "71" = { 
@@ -1995,12 +1995,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8982 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "72" = { 
@@ -2016,12 +2016,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=17884 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "73" = { 
@@ -2037,12 +2037,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9634 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "74" = { 
@@ -2058,12 +2058,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3151 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "75" = { 
@@ -2079,12 +2079,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8941 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "76" = { 
@@ -2100,12 +2100,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=1101 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "77" = { 
@@ -2121,12 +2121,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9696 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "78" = { 
@@ -2142,12 +2142,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9695 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "79" = { 
@@ -2163,12 +2163,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=701 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "80" = { 
@@ -2184,12 +2184,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=28078 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "81" = { 
@@ -2205,12 +2205,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=28076 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "82" = { 
@@ -2226,12 +2226,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9650 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "83" = { 
@@ -2247,12 +2247,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=28060 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "84" = { 
@@ -2268,12 +2268,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8946 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "85" = { 
@@ -2289,12 +2289,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8936 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "86" = { 
@@ -2310,12 +2310,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8931 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "87" = { 
@@ -2331,12 +2331,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8937 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "88" = { 
@@ -2352,12 +2352,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8930 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "89" = { 
@@ -2373,12 +2373,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8925 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "90" = { 
@@ -2394,12 +2394,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8926 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "91" = { 
@@ -2415,12 +2415,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8969 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "92" = { 
@@ -2436,12 +2436,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8963 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "93" = { 
@@ -2457,12 +2457,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8938 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "94" = { 
@@ -2478,12 +2478,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=15013 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "95" = { 
@@ -2499,12 +2499,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=14265 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "96" = { 
@@ -2520,12 +2520,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=10001 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "97" = { 
@@ -2541,12 +2541,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3627 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "98" = { 
@@ -2562,12 +2562,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9692 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "99" = { 
@@ -2583,12 +2583,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=9693 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "100" = { 
@@ -2604,12 +2604,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=18459 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "101" = { 
@@ -2625,12 +2625,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8908 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "102" = { 
@@ -2646,12 +2646,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=5120 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "103" = { 
@@ -2667,12 +2667,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=16959 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "104" = { 
@@ -2688,12 +2688,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=15601 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "105" = { 
@@ -2709,12 +2709,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6627 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "106" = { 
@@ -2730,12 +2730,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=6603 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "107" = { 
@@ -2751,12 +2751,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=4221 AND Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "108" = {
@@ -2771,13 +2771,13 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_method            = "event_flow"
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
-    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3041 AND  message LIKE '%error%' AND  message LIKE '%Log Backup Failed to Complete%' FACET hostname"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3041 AND Level=1 OR Level=2 OR Level=5 AND  message LIKE '%Log Backup Failed to Complete%' FACET hostname"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "109" = {
@@ -2793,12 +2793,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=3041 AND  Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "110" = {
@@ -2814,12 +2814,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8620 AND  Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
-    critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    warning                       = false
+    critical                      = true
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 "111" = {
@@ -2835,12 +2835,12 @@ nrql_alert_condition_details_mssql_rules = {
     aggregation_delay             = 120
     baseline_direction            = "upper_only"
     query                         = "with message as msg SELECT count(message) FROM Log WHERE EventID=8670 AND  Level=1 OR Level=2 OR Level=5 FACET msg AS 'Message', hostname,Level"
-    warning                       = true
+    warning                       = false
     critical                      = false
-    warning_operator              = "above_or_equals"
-    warning_threshold             = 1
-    warning_threshold_duration    = 300
-    warning_threshold_occurrences = "all"
+    critical_operator              = "above_or_equals"
+    critical_threshold             = 1
+    critical_threshold_duration    = 300
+    critical_threshold_occurrences = "all"
 }
 
 
