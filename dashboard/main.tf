@@ -71,93 +71,20 @@ resource "newrelic_one_dashboard" "mssql" {
     widget_pie {
       title  = "Total Log File Count by Monitors"
       row    = 3
-      column = 10
-      width  = 6
+      column = 5
+      width  = 8
       height = 3
 
       nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT max(vlf_count) AS 'Virtual Log File Count' WHERE label.query='virfile'  AND environment IN ({{Environment}}) AND instance IN ({{Instance}}) FACET name"
+        query = "FROM MssqlCustomQuerySample SELECT sum(vlf_count) AS 'Virtual Log File Count' WHERE label.query='virfile'  AND environment IN ({{Environment}}) AND instance IN ({{Instance}}) FACET name"
       }
-    }
-
-    widget_table {
-      title  = "Availability Database Backup State"
-      row    = 6
-      column = 1
-      width  = 6
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT DatabaseName,HoursSinceLastBackup,LastBackupDate WHERE label.query='avbackup'  WHERE environment IN ({{ Environment}}) AND instance IN ({{Instance}})"
-      }
-    }
-
-    widget_billboard {
-      title  = "Group Synchronization Current Health Status"
-      row    = 3
-      column = 1
-      width  = 3
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT latest(SynchronizationHealth) WHERE label.query = 'grouphealth' WHERE environment IN ({{ Environment}}) AND instance IN ({{Instance}})"
-      }
-    }
-
-    widget_billboard {
-      title  = "Group Database Current State"
-      row    = 3
-      column = 4
-      width  = 3
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT latest(DatabaseState) WHERE label.query = 'grouphealth'  AND environment IN ({{ Environment}}) AND instance IN ({{Instance}}) FACET instance"
-      }
-    }
-
-    widget_table {
-      title  = "Group Monitor Health Summary"
-      row    = 4
-      column = 1
-      width  = 12
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,DatabaseState WHERE label.query='grouphealth'  WHERE environment IN ({{Environment}}) AND instance IN ({{Instance}})"
-      }
-    }
-
-    widget_table {
-      title  = "Replica Health Summary"
-      row    = 5
-      column = 4
-      width  = 9
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT AvailabilityMode,ReplicaServerName,FailoverMode,ReplicaRole,IsLocalReplica WHERE label.query='replica' AND environment IN ({{Environment}}) AND instance IN ({{ Instance}})"
-      }
-    }
-
-    widget_billboard {
-      title  = "Unhealth State Replica Server"
-      row    = 5
-      column = 1
-      width  = 3
-      height = 3
-
-      nrql_query {
-        query = "FROM MssqlCustomQuerySample SELECT count(ReplicaServerName) WHERE label.query='grouphealth' AND SynchronizationHealth!='HEALTHY'  AND environment IN ({{Environment}}) AND instance IN ({{ Instance}}) FACET SynchronizationHealth"
-      }
-      critical = 1
     }
 
     ## name = "SIRIUS SQL"
 
     widget_table {
       title  = "Tables With Identity Columns"
-      row    = 6
+      row    = 4
       column = 7
       width  = 6
       height = 3
@@ -222,9 +149,9 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_billboard {
       title  = "Minutes Since Last Backup (Log Shipping)"
-      row    = 7
+      row    = 3
       column = 1
-      width  = 3
+      width  = 4
       height = 3
 
       nrql_query {
@@ -234,9 +161,9 @@ resource "newrelic_one_dashboard" "mssql" {
 
     widget_table {
       title  = "Source Log Summary"
-      row    = 7
-      column = 4
-      width  = 9
+      row    = 4
+      column = 1
+      width  = 6
       height = 3
 
       nrql_query {
@@ -538,11 +465,72 @@ resource "newrelic_one_dashboard" "mssql" {
         query = "FROM MssqlCustomQuerySample SELECT latest(SynchronizationHealth)  WHERE label.query='agonline'  AND environment IN ({{Environment}}) AND instance IN ({{Instance}})FACET instance , AvailabilityGroupName"
       }
     }
-    widget_table {
-      title  = "AG Online Monitor Summary"
+    widget_billboard {
+      title  = "Group Synchronization Current Health Status"
       row    = 1
       column = 7
-      width  = 6
+      width  = 3
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT latest(SynchronizationHealth) WHERE label.query = 'grouphealth' WHERE environment IN ({{ Environment}}) AND instance IN ({{Instance}})"
+      }
+    }
+
+    widget_billboard {
+      title  = "Group Database Current State"
+      row    = 1
+      column = 10
+      width  = 3
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT latest(DatabaseState) WHERE label.query = 'grouphealth'  AND environment IN ({{ Environment}}) AND instance IN ({{Instance}}) FACET instance"
+      }
+    }
+
+    widget_table {
+      title  = "Availability Database Backup State"
+      row    = 6
+      column = 1
+      width  = 12
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT DatabaseName,HoursSinceLastBackup,LastBackupDate WHERE label.query='avbackup'  WHERE environment IN ({{ Environment}}) AND instance IN ({{Instance}})"
+      }
+    }
+
+    widget_table {
+      title  = "Replica Health Summary"
+      row    = 2
+      column = 4
+      width  = 9
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT AvailabilityMode,ReplicaServerName,FailoverMode,ReplicaRole,IsLocalReplica WHERE label.query='replica' AND environment IN ({{Environment}}) AND instance IN ({{ Instance}})"
+      }
+    }
+
+    widget_billboard {
+      title  = "Unhealth State Replica Server"
+      row    = 2
+      column = 1
+      width  = 3
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT count(ReplicaServerName) WHERE label.query='grouphealth' AND SynchronizationHealth!='HEALTHY'  AND environment IN ({{Environment}}) AND instance IN ({{ Instance}}) FACET SynchronizationHealth"
+      }
+      critical = 1
+    }
+
+    widget_table {
+      title  = "AG Online Monitor Summary"
+      row    = 4
+      column = 1
+      width  = 12
       height = 3
 
       nrql_query {
@@ -551,13 +539,25 @@ resource "newrelic_one_dashboard" "mssql" {
     }
     widget_table {
       title  = "AG Failover Monitor"
-      row    = 2
+      row    = 5
       column = 1
       width  = 12
       height = 3
 
       nrql_query {
         query = "FROM MssqlCustomQuerySample SELECT AvailabilityGroup,AvailabilityMode,FailoverMode WHERE label.query='agafc' WHERE environment IN ({{Environment}}) AND instance IN ({{Instance}})"
+      }
+    }
+
+    widget_table {
+      title  = "Group Monitor Health Summary"
+      row    = 3
+      column = 1
+      width  = 12
+      height = 3
+
+      nrql_query {
+        query = "FROM MssqlCustomQuerySample SELECT AvailabilityGroupName,ReplicaServerName,SynchronizationHealth,DatabaseState WHERE label.query='grouphealth'  WHERE environment IN ({{Environment}}) AND instance IN ({{Instance}})"
       }
     }
     # widget_markdown {
